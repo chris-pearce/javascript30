@@ -66,6 +66,7 @@
 
         document.addEventListener('keydown', (e) => {
             if (e.keyCode === chord) {
+                sound.currentTime = 0;
                 sound.play();
                 key.classList.add('playing');
             } else {

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS + CSS Clock</title>
+  <style>
+        html {
+            background: #018DED;
+            font-family: 'helvetica neue';
+            text-align: center;
+            font-size: 10px;
+        }
+
+        body {
+            font-size: 2rem;
+            display: flex;
+            flex: 1;
+            min-height: 100vh;
+            align-items: center;
+        }
+
+        .clock {
+            width: 30rem;
+            height: 30rem;
+            border: 20px solid white;
+            border-radius: 50%;
+            margin: 50px auto;
+            position: relative;
+            padding: 2rem;
+            box-shadow:
+                0 0 0 4px rgba(0,0,0,0.1),
+                inset 0 0 0 3px #EFEFEF,
+                inset 0 0 10px black,
+                0 0 10px rgba(0,0,0,0.2);
+        }
+
+        .clock-face {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform: translateY(-3px); /* account for the height of the clock hands */
+        }
+
+        .hand {
+            width: 50%;
+            height: 6px;
+            background: black;
+            position: absolute;
+            top: 50%;
+            transform-origin: 100%;
+            transform: rotate(90deg);
+            /* transition: all 0.5s; */
+        }
+  </style>
+</head>
+<body>
+    <div class="clock">
+        <div class="clock-face">
+            <div class="hand hour-hand"></div>
+            <div class="hand minute-hand"></div>
+            <div class="hand second-hand"></div>
+        </div>
+    </div>
+
+    <script>
+        const DOM = {
+            h: document.querySelector('.hour-hand'),
+            m: document.querySelector('.minute-hand'),
+            s: document.querySelector('.second-hand')
+        };
+
+        const DEGREES = {
+            h: 30,
+            ms: 6,
+            offset: 90
+        };
+
+        function handPosition(unit, deg, el) {
+            const tick = unit * deg + DEGREES.offset;
+
+            el.style.transform = `rotate(${tick}deg)`;
+
+            // When transitioning `deg` in CSS going from a higher `deg` (59th sec = 444deg) to a
+            // lower `deg` (60th sec = 90deg) means whatever is being transitioned will always
+            // spin back anticlockwise first instead of just moving forward like you'd expect.
+            // This is a hack to stop that. The more elegant way to fix this would be to just let
+            // the `deg` value keep ticking over, i.e., never reseting it back to 90deg, instead
+            // the `deg` value increases endlessly (the highest `int` value in JS is
+            // 9007199254740991, so you'll have to refresh the browser after a few million years).
+            unit === 0 ? el.style.transition = 'none' : el.style.transition = 'all 0.5s';
+        };
+
+        function generateTime() {
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+
+            handPosition(h, DEGREES.h, DOM.h);
+            handPosition(m, DEGREES.ms, DOM.m);
+            handPosition(s, DEGREES.ms, DOM.s);
+
+            setTimeout(generateTime, 1000);
+        };
+
+        generateTime();
+    </script>
+</body>
+</html>

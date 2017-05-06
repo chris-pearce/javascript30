@@ -3,20 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>JS + CSS Clock</title>
-</head>
-<body>
-    <div class="clock">
-        <div class="clock-face">
-            <div class="hand hour-hand"></div>
-            <div class="hand minute-hand"></div>
-            <div class="hand second-hand"></div>
-        </div>
-    </div>
-
-    <style>
+  <style>
         html {
-            background: #018DED url(http://unsplash.it/1500/1000?image=881&blur=50);
-            background-size: cover;
+            background: #018DED;
             font-family: 'helvetica neue';
             text-align: center;
             font-size: 10px;
@@ -49,7 +38,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            transform: translateY(-3px); /* account for the height of the clock hands */
+            transform: translateY(-3px);
         }
 
         .hand {
@@ -60,60 +49,61 @@
             top: 50%;
             transform-origin: 100%;
             transform: rotate(90deg);
-            transition: all 0.5s;
         }
-    </style>
+  </style>
+</head>
+<body>
+    <div class="clock">
+        <div class="clock-face">
+            <div class="hand hour-hand"></div>
+            <div class="hand minute-hand"></div>
+            <div class="hand second-hand"></div>
+        </div>
+    </div>
 
     <script>
-        const currentTime = {
-            hour: new Date().getHours(),
-            minute: new Date().getMinutes(),
-            second: new Date().getSeconds()
+        const DOM = {
+            h: document.querySelector('.hour-hand'),
+            m: document.querySelector('.minute-hand'),
+            s: document.querySelector('.second-hand')
         };
 
-        const clockHandElements = {
-            hour: document.querySelector('.hour-hand'),
-            minute: document.querySelector('.minute-hand'),
-            second: document.querySelector('.second-hand')
+        const DEGREES = {
+            h: 30,
+            ms: 6,
+            offset: 90
         };
 
-        const clockHandCoords = {
-            hour: 30,
-            minuteSecond: 6,
-            start: 90
+        function handPosition(unit, deg, el) {
+            const tick = unit * deg + DEGREES.offset;
+
+            el.style.transform = `rotate(${tick}deg)`;
+
+            // When transitioning `deg` in CSS going from a higher `deg` (59th sec = 444deg) to a
+            // lower `deg` (60th sec = 90deg) means whatever is being transitioned will always
+            // spin back anticlockwise first instead of just moving forward like you'd expect.
+            // This is a hack to stop that. The more elegant way to fix this would be to just let
+            // the `deg` value keep ticking over, i.e., never reseting it back to 90deg, instead
+            // the `deg` value increases endlessly (the highest `int` value in JS is
+            // 9007199254740991, so you'll have to refresh the browser after a few million years).
+            // unit === 0 ? el.style.transition = 'none' : el.style.transition = 'all 0.5s';
+            el.style.transition = unit === 0 ? 'none' : 'all 0.5s';
         };
 
-        for (let time in currentTime) {
-            const interval = time === 'hour' ? clockHandCoords.hour : clockHandCoords.minuteSecond;
-            const handPosition = currentTime[time] * interval + clockHandCoords.start;
-            clockHandElements[time].style.transform = `rotate(${handPosition}deg)`;
+        function generateTime() {
+            const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
+
+            handPosition(h, DEGREES.h, DOM.h);
+            handPosition(m, DEGREES.ms, DOM.m);
+            handPosition(s, DEGREES.ms, DOM.s);
+
+            setTimeout(generateTime, 1000);
         };
 
-        setInterval(time, 1000);
-
-        function time() {
-            const currentTime = new Date().getSeconds();
-            const handPosition = currentTime === 0 ?
-                clockHandCoords.start : currentTime * 6 + clockHandCoords.start;
-            clockHandElements.second.style.transform = `rotate(${handPosition}deg)`;
-        };
-
-        // const TIME = {
-        //     hours: setInterval(time, 3600000, 'Hours', DOM.hourHand),
-        //     minutes: setInterval(time, 60000, 'Minutes', DOM.minuteHand),
-        //     seconds: setInterval(time, 1000, 'Seconds', DOM.secondHand)
-        // };
-
-        // function time(unit, el) {
-        //     const deg = el === DOM.hourHand ? 30 : 6;
-        //     const currentTime = new Date()[`get${unit}`]();
-        //     const startPos = 90;
-        //     const handPos = currentTime === 0 ? startPos : currentTime * deg + startPos;
-
-        //     console.log(currentTime, handPos);
-
-        //     el.style.transform = `rotate(${handPos}deg)`;
-        // };
+        generateTime();
     </script>
 </body>
 </html>

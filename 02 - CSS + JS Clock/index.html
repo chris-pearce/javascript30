@@ -38,7 +38,7 @@
             position: relative;
             width: 100%;
             height: 100%;
-            transform: translateY(-3px); /* account for the height of the clock hands */
+            transform: translateY(-3px);
         }
 
         .hand {
@@ -49,7 +49,6 @@
             top: 50%;
             transform-origin: 100%;
             transform: rotate(90deg);
-            /* transition: all 0.5s; */
         }
   </style>
 </head>
@@ -87,7 +86,8 @@
             // the `deg` value keep ticking over, i.e., never reseting it back to 90deg, instead
             // the `deg` value increases endlessly (the highest `int` value in JS is
             // 9007199254740991, so you'll have to refresh the browser after a few million years).
-            unit === 0 ? el.style.transition = 'none' : el.style.transition = 'all 0.5s';
+            // unit === 0 ? el.style.transition = 'none' : el.style.transition = 'all 0.5s';
+            el.style.transition = unit === 0 ? 'none' : 'all 0.5s';
         };
 
         function generateTime() {

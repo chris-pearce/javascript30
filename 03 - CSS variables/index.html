@@ -1,75 +1,115 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-au">
 
   <head>
-    <meta charset="UTF-8">
-    <title>Scoped CSS Variables and JS</title>
-  </head>
-
-  <body>
-    <h2>Update CSS Variables with
-      <span class='hl'>JS</span>
-    </h2>
-
-    <div class="controls">
-      <label for="spacing">Spacing:</label>
-      <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-sizing="px">
-
-      <label for="blur">Blur:</label>
-      <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-sizing="px">
-
-      <label for="base">Base Color</label>
-      <input id="base" type="color" name="base" value="#ffc600">
-    </div>
-
-    <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
-
+    <meta charset="utf-8">
+    <title>Matilda eating ice cream 🍦</title>
     <style>
       :root {
-        --bg: red;
-        --blur: 10px;
-        --padding: 10px;
+        --img-bg: hotpink;
+        --img-blur: 0;
+        --img-padding: 0;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      *:not(input) {
+        border: 0;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
+        height: 100vh;
+        line-height: 1.5;
+      }
+
+      body {
+        align-items: center;
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        grid-gap: 2em;
+        overflow-y: hidden;
+        margin-left: auto;
+        margin-right: auto;
+        max-width: 70vw;
+      }
+
+      h1 {
+        line-height: 1.3;
+        margin-bottom: 1em;
+      }
+
+      fieldset>div {
+        align-items: center;
+        display: flex;
+        margin-bottom: 1em;
+      }
+
+      fieldset label {
+        margin-right: 1em;
+      }
+
+      fieldset input {
+        flex: 1;
       }
 
       img {
-        background-color: var(--bg);
-        filter: blur(var(--blur));
-        padding: var(--padding);
-      }
-
-      /*
-        misc styles, nothing to do with CSS variables
-      */
-
-      body {
-        text-align: center;
-        background: #193549;
-        color: white;
-        font-family: 'helvetica neue', sans-serif;
-        font-weight: 100;
-        font-size: 50px;
-      }
-
-      .controls {
-        margin-bottom: 50px;
-      }
-
-      input {
-        width: 100px;
+        background-color: var(--img-bg);
+        filter: blur(var(--img-blur));
+        height: auto;
+        justify-self: right;
+        max-height: 100vh;
+        max-width: 100%;
+        padding: var(--img-padding);
+        transition: all 0.2s ease-in-out;
       }
     </style>
+  </head>
+
+  <body>
+    <fieldset>
+      <legend>
+        <h1>Matilda eating ice cream 🍦</h1>
+      </legend>
+      <div>
+        <label for="padding">Padding:</label>
+        <input id="padding" type="range" min="0" max="8" value="0" data-sizing="em">
+      </div>
+      <div>
+        <label for="blur">Blur:</label>
+        <input id="blur" type="range" min="0" max="20" value="0" data-sizing="px">
+      </div>
+      <div>
+        <label for="bg-colour">BG colour:</label>
+        <input id="bg-colour" type="color">
+      </div>
+    </fieldset>
+    <img src="matilda.jpg" alt="Picture of Matilda Pearce eating chocolate ice cream">
 
     <script>
       (function () {
         const img = document.querySelector('img');
         const ranges = document.querySelectorAll('input[type="range"]');
+        const colorPicker = document.querySelector('input[type="color"]');
+        console.log(document.documentElement);
 
         ranges.forEach(item => {
-          item.addEventListener('change', e => {
+          item.addEventListener('input', e => {
             const val = `${e.target.value}${item.dataset.sizing}`;
             const setStyle = prop => img.style.setProperty(prop, val);
-            item.id === 'spacing' ? setStyle('--padding') : setStyle('--blur');
+            item.id === 'padding' ? setStyle('--img-padding') : setStyle('--img-blur');
           });
+        });
+
+        colorPicker.addEventListener('change', e => {
+          img.style.setProperty('--img-bg', e.target.value);
         });
       })();
     </script>

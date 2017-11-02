@@ -1,14 +1,16 @@
 <!doctype html>
-<html lang="en-au">
+<html lang="en-au" class="no-js">
 
   <head>
     <meta charset="utf-8">
-    <title>Matilda eating ice cream 🍦</title>
+    <title>Matilda eating 🍫🍦</title>
     <style>
       :root {
-        --img-bg: hotpink;
+        --page-color: #d62e8d;
         --img-blur: 0;
-        --img-padding: 0;
+        --img-invert: 0;
+        --img-sepia: 0;
+        --font-size-small: 0.9em;
       }
 
       *,
@@ -23,95 +25,170 @@
         padding: 0;
       }
 
+      html {
+        background-color: var(--page-color);
+        color: rgba(0, 0, 0, 0.8);
+      }
+
       html,
       body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-        height: 100vh;
-        line-height: 1.5;
+        line-height: 1.7;
+      }
+
+      @media (min-width: 70em) {
+        html,
+        body {
+          height: 100vh;
+        }
       }
 
       body {
-        align-items: center;
-        display: grid;
-        grid-template-columns: 1fr 2fr;
-        grid-gap: 2em;
-        overflow-y: hidden;
+        background-color: white;
         margin-left: auto;
         margin-right: auto;
-        max-width: 70vw;
+        max-width: 90vw;
+      }
+
+      @supports (display: grid) {
+        @media (min-width: 70em) {
+          body {
+            align-items: center;
+            display: grid;
+            grid-template-columns: 0 1fr 2fr;
+            grid-gap: 2em;
+            max-width: 70vw;
+            overflow-y: hidden;
+          }
+        }
       }
 
       h1 {
+        font-size: 2.2em;
         line-height: 1.3;
-        margin-bottom: 1em;
+        margin-bottom: 0.3em;
+      }
+
+      p {
+        font-size: var(--font-size-smal);
+        margin-bottom: 3em;
+      }
+
+      body>div {
+        padding: 2em;
+      }
+
+      @media (min-width: 70em) {
+        body>div {
+          grid-column: 2;
+          padding: 0;
+        }
+      }
+
+      fieldset {
+        background-color: #faf9f9;
+        outline: 0.3em solid rgba(223, 222, 222, 0.5);
+        padding: 1em;
+      }
+
+      /* Hide visually */
+
+      legend {
+        clip: rect(1px, 1px, 1px, 1px);
+        clip-path: polygon(0 0, 0 0, 0 0, 0 0);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
       }
 
       fieldset>div {
         align-items: center;
         display: flex;
+      }
+
+      fieldset>div:not(:last-child) {
         margin-bottom: 1em;
       }
 
       fieldset label {
+        cursor: pointer;
+        flex: 1;
+        font-size: var(--font-size-smal);
         margin-right: 1em;
       }
 
       fieldset input {
-        flex: 1;
+        flex: 2;
       }
 
       img {
-        background-color: var(--img-bg);
-        filter: blur(var(--img-blur));
+        display: block;
+        filter: blur(var(--img-blur)) invert(var(--img-invert)) sepia(var(--img-sepia));
         height: auto;
-        justify-self: right;
-        max-height: 100vh;
         max-width: 100%;
-        padding: var(--img-padding);
-        transition: all 0.2s ease-in-out;
+        transition: filter 0.15s ease;
+      }
+
+      @media (min-width: 70em) {
+        img {
+          justify-self: right;
+          max-height: 100vh;
+        }
+      }
+
+      /* Hide/show elements based on JavaScript support */
+
+      .no-js fieldset {
+        display: none;
+      }
+
+      .js fieldset {
+        display: block;
       }
     </style>
   </head>
 
   <body>
-    <fieldset>
-      <legend>
-        <h1>Matilda eating ice cream 🍦</h1>
-      </legend>
-      <div>
-        <label for="padding">Padding:</label>
-        <input id="padding" type="range" min="0" max="8" value="0" data-sizing="em">
-      </div>
-      <div>
-        <label for="blur">Blur:</label>
-        <input id="blur" type="range" min="0" max="20" value="0" data-sizing="px">
-      </div>
-      <div>
-        <label for="bg-colour">BG colour:</label>
-        <input id="bg-colour" type="color">
-      </div>
-    </fieldset>
-    <img src="matilda.jpg" alt="Picture of Matilda Pearce eating chocolate ice cream">
+    <div>
+      <h1>Matilda eating 🍫🍦</h1>
+      <p>On holiday with Daddy and Kate in Thailand,
+        <time datetime="07-17">July 2017</time> 🏝 🌊.</p>
+      <fieldset class="no-js">
+        <legend>Apply filters to Matilda or change the background colour of the document</legend>
+        <div>
+          <label for="img-blur">Blur filter:</label>
+          <input class="js-settings-control" id="img-blur" type="range" max="20" value="0" data-unit="px">
+        </div>
+        <div>
+          <label for="img-invert">Invert filter:</label>
+          <input class="js-settings-control" id="img-invert" type="range" max="100" step="1" value="0" data-unit="%">
+        </div>
+        <div>
+          <label for="img-sepia">Sepia filter:</label>
+          <input class="js-settings-control" id="img-sepia" type="range" max="100" step="1" value="0" data-unit="%">
+        </div>
+        <div>
+          <label for="page-color">BG colour:</label>
+          <input class="js-settings-control" id="page-color" type="color" value="#d62e8d">
+        </div>
+      </fieldset>
+    </div>
+    <img src="matilda.webp" alt="Picture of Matilda Pearce eating chocolate ice cream">
 
     <script>
-      (function () {
-        const img = document.querySelector('img');
-        const ranges = document.querySelectorAll('input[type="range"]');
-        const colorPicker = document.querySelector('input[type="color"]');
-        console.log(document.documentElement);
+      document.documentElement.classList.replace('no-js', 'js');
+      const inputs = document.querySelectorAll('.js-settings-control');
 
-        ranges.forEach(item => {
-          item.addEventListener('input', e => {
-            const val = `${e.target.value}${item.dataset.sizing}`;
-            const setStyle = prop => img.style.setProperty(prop, val);
-            item.id === 'padding' ? setStyle('--img-padding') : setStyle('--img-blur');
-          });
-        });
+      function editImage() {
+        const unit = this.dataset.unit || '';
+        document.documentElement.style.setProperty(`--${this.id}`, `${this.value}${unit}`)
+      };
 
-        colorPicker.addEventListener('change', e => {
-          img.style.setProperty('--img-bg', e.target.value);
-        });
-      })();
+      inputs.forEach(item => {
+        item.addEventListener(item.type === 'range' ? 'input' : 'change', editImage);
+      });
     </script>
 
   </body>
